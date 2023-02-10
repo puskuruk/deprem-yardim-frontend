@@ -44,6 +44,18 @@ export interface FilterReasoningMenuProps {
   onChange: (_option: ReasoningFilterMenuOption) => void;
 }
 
+export const getReasoningFilter = (
+  reasoningFilterMenuOption: ReasoningFilterMenuOption
+) => {
+  if (reasoningFilterMenuOption.type === "channel") {
+    return undefined;
+  }
+
+  if (reasoningFilterMenuOption.type === "reason") {
+    return reasoningFilterMenuOption.value;
+  }
+};
+
 const ReasoningFilterMenu: React.FC<FilterReasoningMenuProps> = ({
   onChange,
 }) => {
