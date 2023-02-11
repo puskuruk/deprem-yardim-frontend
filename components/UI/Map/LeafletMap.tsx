@@ -24,12 +24,11 @@ import {
   DEFAULT_IMPORTANCY,
   DEFAULT_MIN_ZOOM_DESKTOP,
   DEFAULT_MIN_ZOOM_MOBILE,
-  DEFAULT_ZOOM,
-  DEFAULT_ZOOM_MOBILE,
   localStorageKeys,
 } from "./utils";
 import { LatLngExpression } from "leaflet";
 import LayerControl, { Point } from "./LayerControl";
+import useDefaultZoom from "@/hooks/useDefaultZoom";
 
 const MapLegend = dynamic(() => import("./MapLegend"), {
   ssr: false,
@@ -162,6 +161,7 @@ function LeafletMap() {
   const data = useMarkerData();
   const isOpen = useIsDrawerOpen();
   const { toggleDrawer, setDrawerData } = useMapActions();
+  const defaultZoom = useDefaultZoom();
 
   const points: Point[] = useMemo(
     () =>
@@ -172,7 +172,7 @@ function LeafletMap() {
       ]),
     [data]
   );
-  const { lat, lng, zoom, id } = router.query;
+  const { lat, lng, id } = router.query;
   const device = useDevice();
 
   const localCoordinatesURL = window.localStorage.getItem(
@@ -188,14 +188,6 @@ function LeafletMap() {
           parseFloat(localCoordinatesURL.split("lng=")[1].split("&")[0]),
         ]
       : DEFAULT_CENTER;
-
-  const defaultZoom = zoom
-    ? parseFloat(zoom as string)
-    : localCoordinatesURL
-    ? parseFloat(localCoordinatesURL.split("zoom=")[1].split("&")[0])
-    : device === "desktop"
-    ? DEFAULT_ZOOM
-    : DEFAULT_ZOOM_MOBILE;
 
   const isIdExists = id;
 
